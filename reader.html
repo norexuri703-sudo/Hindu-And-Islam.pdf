@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Hindu And Islam - Online Reader</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#111827;
+}
+
+body{
+  overflow:hidden;
+}
+
+/* HEADER */
+.header{
+  height:64px;
+  background:#111827;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+
+.title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:18px;
+  font-weight:700;
+}
+
+.book-icon{
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#263449;
+  font-size:20px;
+}
+
+/* CONTROLS */
+.controls{
+  height:58px;
+  background:#1f2937;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  color:white;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+button{
+  border:0;
+  background:#374151;
+  color:white;
+  border-radius:8px;
+  padding:9px 13px;
+  font-size:14px;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#4b5563;
+}
+
+button:disabled{
+  opacity:.4;
+  cursor:not-allowed;
+}
+
+.page-info{
+  min-width:100px;
+  text-align:center;
+  font-size:14px;
+  font-weight:600;
+}
+
+.zoom-info{
+  min-width:55px;
+  text-align:center;
+  font-size:13px;
+}
+
+/* READER */
+.reader{
+  height:calc(100vh - 122px);
+  overflow:auto;
+  background:#dfe3e8;
+  padding:25px 15px 50px;
+  text-align:center;
+  scroll-behavior:smooth;
+}
+
+.page{
+  display:block;
+  margin:0 auto 22px;
+  background:white;
+  box-shadow:0 5px 25px rgba(0,0,0,.22);
+  max-width:100%;
+  height:auto;
+}
+
+.loading{
+  color:#555;
+  font-size:16px;
+  padding:60px 20px;
+}
+
+.error{
+  max-width:500px;
+  margin:60px auto;
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  color:#b91c1c;
+}
+
+/* MOBILE */
+@media(max-width:700px){
+
+  .header{
+    height:58px;
+    padding:0 12px;
+  }
+
+  .title{
+    font-size:15px;
+  }
+
+  .book-icon{
+    width:34px;
+    height:34px;
+    font-size:17px;
+  }
+
+  .controls{
+    height:58px;
+    gap:5px;
+    padding:0 5px;
+  }
+
+  button{
+    padding:8px 9px;
+    font-size:13px;
+  }
+
+  .page-info{
+    min-width:82px;
+    font-size:12px;
+  }
+
+  .zoom-info{
+    min-width:45px;
+    font-size:12px;
+  }
+
+  .reader{
+    height:calc(100vh - 116px);
+    padding:12px 5px 35px;
+  }
+
+  .page{
+    margin-bottom:14px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+
+  <div class="title">
+    <div class="book-icon">📖</div>
+    <div>Hindu And Islam</div>
+  </div>
+
+</div>
+
+
+<!-- CONTROLS -->
+<div class="controls">
+
+  <button id="prevBtn">‹</button>
+
+  <div class="page-info">
+    <span id="currentPage">1</span>
+    /
+    <span id="totalPages">...</span>
+  </div>
+
+  <button id="nextBtn">›</button>
+
+  <button id="zoomOut">−</button>
+
+  <div class="zoom-info" id="zoomValue">
+    100%
+  </div>
+
+  <button id="zoomIn">+</button>
+
+</div>
+
+
+<!-- PDF READER -->
+<div class="reader" id="reader">
+
+  <div class="loading" id="loading">
+    📖 Loading book...
+  </div>
+
+</div>
+
+
+<!-- PDF.JS -->
+<script type="module">
+
+import * as pdfjsLib from
+'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/build/pdf.min.mjs';
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/build/pdf.worker.min.mjs';
+
+
+/* YOUR PDF */
+const PDF_URL =
+'Hindu%20And%20Islam.pdf';
+
+
+let pdf = null;
+let currentPage = 1;
+let totalPages = 0;
+let scale = 1.0;
+
+const reader = document.getElementById('reader');
+const loading = document.getElementById('loading');
+
+const currentPageText =
+document.getElementById('currentPage');
+
+const totalPagesText =
+document.getElementById('totalPages');
+
+const zoomValue =
+document.getElementById('zoomValue');
+
+const prevBtn =
+document.getElementById('prevBtn');
+
+const nextBtn =
+document.getElementById('nextBtn');
+
+
+/* LOAD PDF */
+async function loadPDF(){
+
+  try{
+
+    pdf = await pdfjsLib.getDocument(PDF_URL).promise;
+
+    totalPages = pdf.numPages;
+
+    totalPagesText.textContent = totalPages;
+
+    loading.remove();
+
+    await renderPage(currentPage);
+
+    prevBtn.disabled = true;
+
+    if(totalPages <= 1){
+      nextBtn.disabled = true;
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    loading.innerHTML = `
+      <div class="error">
+        <h3>PDF could not be loaded</h3>
+        <p>Please refresh the page and try again.</p>
+      </div>
+    `;
+
+  }
+
+}
+
+
+/* RENDER PAGE */
+async function renderPage(pageNumber){
+
+  if(!pdf) return;
+
+  const page =
+    await pdf.getPage(pageNumber);
+
+  const viewport =
+    page.getViewport({
+      scale: scale
+    });
+
+
+  /* Remove old page */
+  reader
+    .querySelectorAll('.page')
+    .forEach(el => el.remove());
+
+
+  const canvas =
+    document.createElement('canvas');
+
+  canvas.className = 'page';
+
+  const context =
+    canvas.getContext('2d');
+
+
+  const pixelRatio =
+    window.devicePixelRatio || 1;
+
+
+  canvas.width =
+    Math.floor(viewport.width * pixelRatio);
+
+  canvas.height =
+    Math.floor(viewport.height * pixelRatio);
+
+  canvas.style.width =
+    Math.floor(viewport.width) + 'px';
+
+  canvas.style.height =
+    Math.floor(viewport.height) + 'px';
+
+
+  reader.appendChild(canvas);
+
+
+  await page.render({
+
+    canvasContext: context,
+
+    viewport: viewport,
+
+    transform:
+      pixelRatio !== 1
+      ? [pixelRatio,0,0,pixelRatio,0,0]
+      : null
+
+  }).promise;
+
+
+  currentPageText.textContent =
+    pageNumber;
+
+
+  updateButtons();
+
+}
+
+
+/* BUTTON STATE */
+function updateButtons(){
+
+  prevBtn.disabled =
+    currentPage <= 1;
+
+  nextBtn.disabled =
+    currentPage >= totalPages;
+
+}
+
+
+/* NEXT */
+nextBtn.addEventListener('click', async ()=>{
+
+  if(currentPage >= totalPages) return;
+
+  currentPage++;
+
+  await renderPage(currentPage);
+
+  reader.scrollTo({
+    top:0,
+    behavior:'smooth'
+  });
+
+});
+
+
+/* PREVIOUS */
+prevBtn.addEventListener('click', async ()=>{
+
+  if(currentPage <= 1) return;
+
+  currentPage--;
+
+  await renderPage(currentPage);
+
+  reader.scrollTo({
+    top:0,
+    behavior:'smooth'
+  });
+
+});
+
+
+/* ZOOM IN */
+document.getElementById('zoomIn')
+.addEventListener('click', async ()=>{
+
+  if(scale >= 2.5) return;
+
+  scale += 0.15;
+
+  scale =
+    Math.round(scale * 100) / 100;
+
+  zoomValue.textContent =
+    Math.round(scale * 100) + '%';
+
+  await renderPage(currentPage);
+
+});
+
+
+/* ZOOM OUT */
+document.getElementById('zoomOut')
+.addEventListener('click', async ()=>{
+
+  if(scale <= 0.6) return;
+
+  scale -= 0.15;
+
+  scale =
+    Math.round(scale * 100) / 100;
+
+  zoomValue.textContent =
+    Math.round(scale * 100) + '%';
+
+  await renderPage(currentPage);
+
+});
+
+
+/* START */
+loadPDF();
+
+</script>
+
+</body>
+</html>
