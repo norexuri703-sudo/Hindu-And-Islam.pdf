@@ -1,471 +1,1325 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
 
-<title>Hindu And Islam - Online Reader</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+  >
 
-<style>
-*{
-  box-sizing:border-box;
-}
+  <meta name="theme-color" content="#111827">
 
-html,body{
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
-  font-family:Arial,Helvetica,sans-serif;
-  background:#111827;
-}
+  <title>Hindu And Islam | Reader</title>
 
-body{
-  overflow:hidden;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-/* HEADER */
-.header{
-  height:64px;
-  background:#111827;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 18px;
-  border-bottom:1px solid rgba(255,255,255,.1);
-}
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+      background: #e5e7eb;
+    }
 
-.title{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-size:18px;
-  font-weight:700;
-}
+    body {
+      display: flex;
+      flex-direction: column;
+    }
 
-.book-icon{
-  width:38px;
-  height:38px;
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#263449;
-  font-size:20px;
-}
+    /* =========================
+       HEADER
+    ========================= */
 
-/* CONTROLS */
-.controls{
-  height:58px;
-  background:#1f2937;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  color:white;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
+    .topbar {
+      height: 72px;
+      min-height: 72px;
+      background: #111827;
+      color: white;
 
-button{
-  border:0;
-  background:#374151;
-  color:white;
-  border-radius:8px;
-  padding:9px 13px;
-  font-size:14px;
-  cursor:pointer;
-}
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
 
-button:hover{
-  background:#4b5563;
-}
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
 
-button:disabled{
-  opacity:.4;
-  cursor:not-allowed;
-}
+    .book-icon {
+      width: 42px;
+      height: 42px;
 
-.page-info{
-  min-width:100px;
-  text-align:center;
-  font-size:14px;
-  font-weight:600;
-}
+      border-radius: 12px;
 
-.zoom-info{
-  min-width:55px;
-  text-align:center;
-  font-size:13px;
-}
+      background: #24324a;
 
-/* READER */
-.reader{
-  height:calc(100vh - 122px);
-  overflow:auto;
-  background:#dfe3e8;
-  padding:25px 15px 50px;
-  text-align:center;
-  scroll-behavior:smooth;
-}
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-.page{
-  display:block;
-  margin:0 auto 22px;
-  background:white;
-  box-shadow:0 5px 25px rgba(0,0,0,.22);
-  max-width:100%;
-  height:auto;
-}
+      font-size: 22px;
 
-.loading{
-  color:#555;
-  font-size:16px;
-  padding:60px 20px;
-}
+      margin-right: 12px;
+    }
 
-.error{
-  max-width:500px;
-  margin:60px auto;
-  background:white;
-  padding:25px;
-  border-radius:12px;
-  color:#b91c1c;
-}
+    .book-title {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: 0.1px;
 
-/* MOBILE */
-@media(max-width:700px){
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-  .header{
-    height:58px;
-    padding:0 12px;
-  }
+    /* =========================
+       TOOLBAR
+    ========================= */
 
-  .title{
-    font-size:15px;
-  }
+    .toolbar {
+      min-height: 76px;
 
-  .book-icon{
-    width:34px;
-    height:34px;
-    font-size:17px;
-  }
+      background: #1f2937;
 
-  .controls{
-    height:58px;
-    gap:5px;
-    padding:0 5px;
-  }
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-  button{
-    padding:8px 9px;
-    font-size:13px;
-  }
+      gap: 8px;
 
-  .page-info{
-    min-width:82px;
-    font-size:12px;
-  }
+      padding: 10px 12px;
 
-  .zoom-info{
-    min-width:45px;
-    font-size:12px;
-  }
+      color: white;
 
-  .reader{
-    height:calc(100vh - 116px);
-    padding:12px 5px 35px;
-  }
+      box-shadow:
+        0 2px 8px rgba(0,0,0,0.15);
 
-  .page{
-    margin-bottom:14px;
-  }
-}
-</style>
+      z-index: 10;
+    }
+
+    .tool-button {
+      width: 48px;
+      height: 48px;
+
+      border: 0;
+      border-radius: 12px;
+
+      background: #374151;
+      color: white;
+
+      font-size: 20px;
+      font-weight: 600;
+
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      -webkit-tap-highlight-color: transparent;
+
+      transition:
+        background 0.15s ease,
+        transform 0.1s ease;
+    }
+
+    .tool-button:active {
+      transform: scale(0.94);
+      background: #4b5563;
+    }
+
+    .tool-button:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+
+    .page-info {
+      min-width: 100px;
+
+      text-align: center;
+
+      font-size: 16px;
+      font-weight: 700;
+
+      color: #f9fafb;
+    }
+
+    .zoom-info {
+      min-width: 66px;
+
+      text-align: center;
+
+      font-size: 15px;
+      font-weight: 600;
+
+      color: #f9fafb;
+    }
+
+    /* =========================
+       READER AREA
+    ========================= */
+
+    .reader {
+      flex: 1;
+
+      width: 100%;
+
+      overflow: auto;
+
+      background: #e5e7eb;
+
+      padding: 28px 18px 50px;
+
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .page-wrapper {
+      position: relative;
+
+      background: white;
+
+      box-shadow:
+        0 8px 30px rgba(0,0,0,0.18);
+
+      border-radius: 3px;
+
+      overflow: hidden;
+
+      max-width: 100%;
+    }
+
+    #pdf-canvas {
+      display: block;
+
+      background: white;
+
+      max-width: none;
+      height: auto;
+    }
+
+    /* =========================
+       LOADING
+    ========================= */
+
+    .status {
+      position: fixed;
+
+      left: 50%;
+      top: 50%;
+
+      transform: translate(-50%, -50%);
+
+      width: min(90%, 420px);
+
+      background: white;
+
+      border-radius: 18px;
+
+      padding: 30px 24px;
+
+      text-align: center;
+
+      box-shadow:
+        0 15px 50px rgba(0,0,0,0.20);
+
+      z-index: 100;
+    }
+
+    .status-icon {
+      width: 54px;
+      height: 54px;
+
+      margin: 0 auto 15px;
+
+      border-radius: 50%;
+
+      background: #eef2ff;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 25px;
+    }
+
+    .status-title {
+      font-size: 19px;
+      font-weight: 700;
+
+      color: #111827;
+
+      margin-bottom: 8px;
+    }
+
+    .status-text {
+      font-size: 14px;
+
+      line-height: 1.6;
+
+      color: #6b7280;
+    }
+
+    .progress {
+      width: 100%;
+      height: 5px;
+
+      margin-top: 18px;
+
+      background: #e5e7eb;
+
+      border-radius: 10px;
+
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+
+      background: #4f46e5;
+
+      transition: width 0.2s ease;
+    }
+
+    .error {
+      display: none;
+    }
+
+    .error .status-icon {
+      background: #fee2e2;
+    }
+
+    .error .status-title {
+      color: #b91c1c;
+    }
+
+    .retry-button {
+      margin-top: 18px;
+
+      border: 0;
+
+      padding: 12px 22px;
+
+      border-radius: 10px;
+
+      background: #111827;
+      color: white;
+
+      font-size: 14px;
+      font-weight: 600;
+
+      cursor: pointer;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 600px) {
+
+      .topbar {
+        height: 68px;
+        min-height: 68px;
+
+        padding: 0 18px;
+      }
+
+      .book-icon {
+        width: 40px;
+        height: 40px;
+
+        font-size: 21px;
+      }
+
+      .book-title {
+        font-size: 18px;
+      }
+
+      .toolbar {
+        min-height: 76px;
+
+        gap: 7px;
+
+        padding: 10px 8px;
+      }
+
+      .tool-button {
+        width: 48px;
+        height: 48px;
+
+        border-radius: 12px;
+
+        font-size: 19px;
+      }
+
+      .page-info {
+        min-width: 92px;
+        font-size: 15px;
+      }
+
+      .zoom-info {
+        min-width: 58px;
+        font-size: 14px;
+      }
+
+      .reader {
+        padding:
+          18px
+          10px
+          40px;
+      }
+
+      .status {
+        padding: 28px 20px;
+      }
+    }
+
+    @media (max-width: 390px) {
+
+      .tool-button {
+        width: 44px;
+        height: 44px;
+      }
+
+      .page-info {
+        min-width: 76px;
+      }
+
+      .zoom-info {
+        min-width: 50px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
-<div class="header">
+  <!-- =========================
+       HEADER
+  ========================== -->
 
-  <div class="title">
-    <div class="book-icon">📖</div>
-    <div>Hindu And Islam</div>
+  <header class="topbar">
+
+    <div class="book-icon">
+      📖
+    </div>
+
+    <div class="book-title">
+      Hindu And Islam
+    </div>
+
+  </header>
+
+
+  <!-- =========================
+       TOOLBAR
+  ========================== -->
+
+  <div class="toolbar">
+
+    <button
+      id="prevBtn"
+      class="tool-button"
+      type="button"
+      aria-label="Previous page"
+    >
+      ‹
+    </button>
+
+    <div
+      id="pageInfo"
+      class="page-info"
+    >
+      1 / ...
+    </div>
+
+    <button
+      id="nextBtn"
+      class="tool-button"
+      type="button"
+      aria-label="Next page"
+    >
+      ›
+    </button>
+
+    <button
+      id="zoomOutBtn"
+      class="tool-button"
+      type="button"
+      aria-label="Zoom out"
+    >
+      −
+    </button>
+
+    <div
+      id="zoomInfo"
+      class="zoom-info"
+    >
+      100%
+    </div>
+
+    <button
+      id="zoomInBtn"
+      class="tool-button"
+      type="button"
+      aria-label="Zoom in"
+    >
+      +
+    </button>
+
   </div>
 
-</div>
+
+  <!-- =========================
+       PDF READER
+  ========================== -->
+
+  <main
+    id="reader"
+    class="reader"
+  >
+
+    <div
+      id="pageWrapper"
+      class="page-wrapper"
+    >
+
+      <canvas
+        id="pdf-canvas"
+      ></canvas>
+
+    </div>
+
+  </main>
 
 
-<!-- CONTROLS -->
-<div class="controls">
+  <!-- =========================
+       LOADING MESSAGE
+  ========================== -->
 
-  <button id="prevBtn">‹</button>
+  <div
+    id="loadingBox"
+    class="status"
+  >
 
-  <div class="page-info">
-    <span id="currentPage">1</span>
-    /
-    <span id="totalPages">...</span>
+    <div class="status-icon">
+      📖
+    </div>
+
+    <div class="status-title">
+      Loading book...
+    </div>
+
+    <div
+      id="loadingText"
+      class="status-text"
+    >
+      Please wait while the book is loading.
+    </div>
+
+    <div class="progress">
+      <div
+        id="progressBar"
+        class="progress-bar"
+      ></div>
+    </div>
+
   </div>
 
-  <button id="nextBtn">›</button>
 
-  <button id="zoomOut">−</button>
+  <!-- =========================
+       ERROR MESSAGE
+  ========================== -->
 
-  <div class="zoom-info" id="zoomValue">
-    100%
+  <div
+    id="errorBox"
+    class="status error"
+  >
+
+    <div class="status-icon">
+      ⚠️
+    </div>
+
+    <div class="status-title">
+      PDF could not be loaded
+    </div>
+
+    <div
+      id="errorText"
+      class="status-text"
+    >
+      Please refresh the page and try again.
+    </div>
+
+    <button
+      class="retry-button"
+      type="button"
+      onclick="location.reload()"
+    >
+      Try Again
+    </button>
+
   </div>
 
-  <button id="zoomIn">+</button>
 
-</div>
+  <!-- =========================
+       PDF.JS
+  ========================== -->
 
+  <script type="module">
 
-<!-- PDF READER -->
-<div class="reader" id="reader">
-
-  <div class="loading" id="loading">
-    📖 Loading book...
-  </div>
-
-</div>
+    import * as pdfjsLib from
+      "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/build/pdf.min.mjs";
 
 
-<!-- PDF.JS -->
-<script type="module">
+    /* =========================================
+       IMPORTANT
+       Your PDF filename
+    ========================================== */
 
-import * as pdfjsLib from
-'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/build/pdf.min.mjs';
-
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/build/pdf.worker.min.mjs';
-
-
-/* YOUR PDF */
-const PDF_URL = 'Hindu-And-Islam.pdf';
+    const PDF_URL =
+      "./Hindu-And-Islam.pdf?version=2";
 
 
-let pdf = null;
-let currentPage = 1;
-let totalPages = 0;
-let scale = 1.0;
+    /* =========================================
+       PDF.JS WORKER
+    ========================================== */
 
-const reader = document.getElementById('reader');
-const loading = document.getElementById('loading');
-
-const currentPageText =
-document.getElementById('currentPage');
-
-const totalPagesText =
-document.getElementById('totalPages');
-
-const zoomValue =
-document.getElementById('zoomValue');
-
-const prevBtn =
-document.getElementById('prevBtn');
-
-const nextBtn =
-document.getElementById('nextBtn');
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/build/pdf.worker.min.mjs";
 
 
-/* LOAD PDF */
-async function loadPDF(){
+    /* =========================================
+       VARIABLES
+    ========================================== */
 
-  try{
+    let pdfDocument = null;
 
-    pdf = await pdfjsLib.getDocument(PDF_URL).promise;
+    let currentPage = 1;
 
-    totalPages = pdf.numPages;
+    let totalPages = 0;
 
-    totalPagesText.textContent = totalPages;
+    let zoom = 1.0;
 
-    loading.remove();
+    let rendering = false;
 
-    await renderPage(currentPage);
+    let pendingPage = null;
 
-    prevBtn.disabled = true;
 
-    if(totalPages <= 1){
-      nextBtn.disabled = true;
+    /* =========================================
+       ELEMENTS
+    ========================================== */
+
+    const canvas =
+      document.getElementById("pdf-canvas");
+
+    const ctx =
+      canvas.getContext("2d");
+
+    const reader =
+      document.getElementById("reader");
+
+    const pageWrapper =
+      document.getElementById("pageWrapper");
+
+    const pageInfo =
+      document.getElementById("pageInfo");
+
+    const zoomInfo =
+      document.getElementById("zoomInfo");
+
+    const prevBtn =
+      document.getElementById("prevBtn");
+
+    const nextBtn =
+      document.getElementById("nextBtn");
+
+    const zoomOutBtn =
+      document.getElementById("zoomOutBtn");
+
+    const zoomInBtn =
+      document.getElementById("zoomInBtn");
+
+    const loadingBox =
+      document.getElementById("loadingBox");
+
+    const loadingText =
+      document.getElementById("loadingText");
+
+    const progressBar =
+      document.getElementById("progressBar");
+
+    const errorBox =
+      document.getElementById("errorBox");
+
+    const errorText =
+      document.getElementById("errorText");
+
+
+    /* =========================================
+       SHOW ERROR
+    ========================================== */
+
+    function showError(message) {
+
+      loadingBox.style.display = "none";
+
+      errorBox.style.display = "block";
+
+      errorText.textContent =
+        message ||
+        "Please refresh the page and try again.";
     }
 
-  }catch(error){
 
-    console.error(error);
+    /* =========================================
+       UPDATE CONTROLS
+    ========================================== */
 
-    loading.innerHTML = `
-      <div class="error">
-        <h3>PDF could not be loaded</h3>
-        <p>Please refresh the page and try again.</p>
-      </div>
-    `;
+    function updateControls() {
 
-  }
+      pageInfo.textContent =
+        `${currentPage} / ${totalPages}`;
 
-}
+      zoomInfo.textContent =
+        `${Math.round(zoom * 100)}%`;
 
+      prevBtn.disabled =
+        currentPage <= 1;
 
-/* RENDER PAGE */
-async function renderPage(pageNumber){
+      nextBtn.disabled =
+        currentPage >= totalPages;
 
-  if(!pdf) return;
+    }
 
-  const page =
-    await pdf.getPage(pageNumber);
 
-  const viewport =
-    page.getViewport({
-      scale: scale
-    });
+    /* =========================================
+       RENDER PAGE
+    ========================================== */
 
+    async function renderPage(pageNumber) {
 
-  /* Remove old page */
-  reader
-    .querySelectorAll('.page')
-    .forEach(el => el.remove());
+      if (!pdfDocument) {
+        return;
+      }
 
+      if (rendering) {
 
-  const canvas =
-    document.createElement('canvas');
+        pendingPage =
+          pageNumber;
 
-  canvas.className = 'page';
+        return;
+      }
 
-  const context =
-    canvas.getContext('2d');
+      rendering = true;
 
+      try {
 
-  const pixelRatio =
-    window.devicePixelRatio || 1;
+        const page =
+          await pdfDocument.getPage(pageNumber);
 
 
-  canvas.width =
-    Math.floor(viewport.width * pixelRatio);
+        /*
+          Calculate a good mobile-friendly scale.
+        */
 
-  canvas.height =
-    Math.floor(viewport.height * pixelRatio);
+        const baseViewport =
+          page.getViewport({
+            scale: 1
+          });
 
-  canvas.style.width =
-    Math.floor(viewport.width) + 'px';
 
-  canvas.style.height =
-    Math.floor(viewport.height) + 'px';
+        const availableWidth =
+          Math.max(
+            280,
+            reader.clientWidth - 24
+          );
 
 
-  reader.appendChild(canvas);
+        let scale =
+          availableWidth /
+          baseViewport.width;
 
 
-  await page.render({
+        /*
+          Never make the page too small.
+        */
 
-    canvasContext: context,
+        scale =
+          Math.max(scale, 0.7);
 
-    viewport: viewport,
 
-    transform:
-      pixelRatio !== 1
-      ? [pixelRatio,0,0,pixelRatio,0,0]
-      : null
+        /*
+          Apply user zoom.
+        */
 
-  }).promise;
+        scale =
+          scale * zoom;
 
 
-  currentPageText.textContent =
-    pageNumber;
+        const viewport =
+          page.getViewport({
+            scale: scale
+          });
 
 
-  updateButtons();
+        const outputScale =
+          window.devicePixelRatio || 1;
 
-}
 
+        canvas.width =
+          Math.floor(
+            viewport.width *
+            outputScale
+          );
 
-/* BUTTON STATE */
-function updateButtons(){
 
-  prevBtn.disabled =
-    currentPage <= 1;
+        canvas.height =
+          Math.floor(
+            viewport.height *
+            outputScale
+          );
 
-  nextBtn.disabled =
-    currentPage >= totalPages;
 
-}
+        canvas.style.width =
+          `${viewport.width}px`;
 
 
-/* NEXT */
-nextBtn.addEventListener('click', async ()=>{
+        canvas.style.height =
+          `${viewport.height}px`;
 
-  if(currentPage >= totalPages) return;
 
-  currentPage++;
+        pageWrapper.style.width =
+          `${viewport.width}px`;
 
-  await renderPage(currentPage);
 
-  reader.scrollTo({
-    top:0,
-    behavior:'smooth'
-  });
+        pageWrapper.style.height =
+          `${viewport.height}px`;
 
-});
 
+        const transform =
+          outputScale !== 1
+            ? [
+                outputScale,
+                0,
+                0,
+                outputScale,
+                0,
+                0
+              ]
+            : null;
 
-/* PREVIOUS */
-prevBtn.addEventListener('click', async ()=>{
 
-  if(currentPage <= 1) return;
+        await page.render({
 
-  currentPage--;
+          canvasContext: ctx,
 
-  await renderPage(currentPage);
+          viewport: viewport,
 
-  reader.scrollTo({
-    top:0,
-    behavior:'smooth'
-  });
+          transform: transform
 
-});
+        }).promise;
 
 
-/* ZOOM IN */
-document.getElementById('zoomIn')
-.addEventListener('click', async ()=>{
+        currentPage =
+          pageNumber;
 
-  if(scale >= 2.5) return;
 
-  scale += 0.15;
+        updateControls();
 
-  scale =
-    Math.round(scale * 100) / 100;
 
-  zoomValue.textContent =
-    Math.round(scale * 100) + '%';
+        /*
+          Keep the reader near the top
+          when changing page.
+        */
 
-  await renderPage(currentPage);
+        reader.scrollTop = 0;
 
-});
 
+      } catch (error) {
 
-/* ZOOM OUT */
-document.getElementById('zoomOut')
-.addEventListener('click', async ()=>{
+        console.error(
+          "Page rendering error:",
+          error
+        );
 
-  if(scale <= 0.6) return;
+        showError(
+          "The PDF page could not be rendered."
+        );
 
-  scale -= 0.15;
+      } finally {
 
-  scale =
-    Math.round(scale * 100) / 100;
+        rendering = false;
 
-  zoomValue.textContent =
-    Math.round(scale * 100) + '%';
 
-  await renderPage(currentPage);
+        if (pendingPage !== null) {
 
-});
+          const nextPage =
+            pendingPage;
 
+          pendingPage = null;
 
-/* START */
-loadPDF();
+          renderPage(nextPage);
+        }
 
-</script>
+      }
+
+    }
+
+
+    /* =========================================
+       LOAD PDF
+    ========================================== */
+
+    async function loadPDF() {
+
+      try {
+
+        loadingText.textContent =
+          "Connecting to the book...";
+
+
+        /*
+          First fetch the PDF ourselves.
+
+          This avoids some browser/PDF.js
+          URL-loading problems.
+        */
+
+        const response =
+          await fetch(PDF_URL, {
+
+            method: "GET",
+
+            cache: "no-store"
+
+          });
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            `PDF request failed: ${response.status}`
+          );
+
+        }
+
+
+        const contentLength =
+          response.headers.get(
+            "content-length"
+          );
+
+
+        let received = 0;
+
+        const readerStream =
+          response.body?.getReader();
+
+
+        let chunks = [];
+
+
+        if (readerStream) {
+
+          while (true) {
+
+            const {
+              done,
+              value
+            } =
+              await readerStream.read();
+
+
+            if (done) {
+              break;
+            }
+
+
+            chunks.push(value);
+
+            received +=
+              value.length;
+
+
+            if (contentLength) {
+
+              const percent =
+                Math.min(
+                  95,
+                  Math.round(
+                    received /
+                    Number(contentLength) *
+                    100
+                  )
+                );
+
+
+              progressBar.style.width =
+                `${percent}%`;
+
+              loadingText.textContent =
+                `Loading book... ${percent}%`;
+
+            } else {
+
+              loadingText.textContent =
+                "Downloading book...";
+
+            }
+
+          }
+
+        } else {
+
+          const buffer =
+            await response.arrayBuffer();
+
+          chunks = [
+            new Uint8Array(buffer)
+          ];
+
+        }
+
+
+        /*
+          Combine downloaded chunks.
+        */
+
+        let totalLength = 0;
+
+        for (
+          const chunk of chunks
+        ) {
+
+          totalLength +=
+            chunk.length;
+
+        }
+
+
+        const pdfData =
+          new Uint8Array(
+            totalLength
+          );
+
+
+        let position = 0;
+
+
+        for (
+          const chunk of chunks
+        ) {
+
+          pdfData.set(
+            chunk,
+            position
+          );
+
+          position +=
+            chunk.length;
+
+        }
+
+
+        progressBar.style.width =
+          "100%";
+
+
+        loadingText.textContent =
+          "Opening book...";
+
+
+        /*
+          Give PDF.js the actual bytes.
+        */
+
+        const loadingTask =
+          pdfjsLib.getDocument({
+
+            data: pdfData,
+
+            useWorkerFetch: true,
+
+            isEvalSupported: true
+
+          });
+
+
+        pdfDocument =
+          await loadingTask.promise;
+
+
+        totalPages =
+          pdfDocument.numPages;
+
+
+        currentPage = 1;
+
+
+        updateControls();
+
+
+        loadingBox.style.display =
+          "none";
+
+
+        await renderPage(1);
+
+
+      } catch (error) {
+
+        console.error(
+          "PDF loading error:",
+          error
+        );
+
+
+        showError(
+          "The PDF could not be loaded. Please check that the file is named exactly \"Hindu-And-Islam.pdf\" and try again."
+        );
+
+      }
+
+    }
+
+
+    /* =========================================
+       PREVIOUS
+    ========================================== */
+
+    prevBtn.addEventListener(
+      "click",
+      () => {
+
+        if (
+          currentPage > 1
+        ) {
+
+          renderPage(
+            currentPage - 1
+          );
+
+        }
+
+      }
+    );
+
+
+    /* =========================================
+       NEXT
+    ========================================== */
+
+    nextBtn.addEventListener(
+      "click",
+      () => {
+
+        if (
+          currentPage <
+          totalPages
+        ) {
+
+          renderPage(
+            currentPage + 1
+          );
+
+        }
+
+      }
+    );
+
+
+    /* =========================================
+       ZOOM OUT
+    ========================================== */
+
+    zoomOutBtn.addEventListener(
+      "click",
+      () => {
+
+        zoom =
+          Math.max(
+            0.6,
+            zoom - 0.1
+          );
+
+        updateControls();
+
+        renderPage(
+          currentPage
+        );
+
+      }
+    );
+
+
+    /* =========================================
+       ZOOM IN
+    ========================================== */
+
+    zoomInBtn.addEventListener(
+      "click",
+      () => {
+
+        zoom =
+          Math.min(
+            3.0,
+            zoom + 0.1
+          );
+
+        updateControls();
+
+        renderPage(
+          currentPage
+        );
+
+      }
+    );
+
+
+    /* =========================================
+       KEYBOARD SUPPORT
+    ========================================== */
+
+    document.addEventListener(
+      "keydown",
+      (event) => {
+
+        if (
+          event.key === "ArrowLeft"
+        ) {
+
+          if (
+            currentPage > 1
+          ) {
+
+            renderPage(
+              currentPage - 1
+            );
+
+          }
+
+        }
+
+
+        if (
+          event.key === "ArrowRight"
+        ) {
+
+          if (
+            currentPage <
+            totalPages
+          ) {
+
+            renderPage(
+              currentPage + 1
+            );
+
+          }
+
+        }
+
+
+        if (
+          event.key === "+"
+          ||
+          event.key === "="
+        ) {
+
+          zoom =
+            Math.min(
+              3.0,
+              zoom + 0.1
+            );
+
+          updateControls();
+
+          renderPage(
+            currentPage
+          );
+
+        }
+
+
+        if (
+          event.key === "-"
+        ) {
+
+          zoom =
+            Math.max(
+              0.6,
+              zoom - 0.1
+            );
+
+          updateControls();
+
+          renderPage(
+            currentPage
+          );
+
+        }
+
+      }
+    );
+
+
+    /* =========================================
+       WINDOW RESIZE
+    ========================================== */
+
+    let resizeTimer;
+
+    window.addEventListener(
+      "resize",
+      () => {
+
+        clearTimeout(
+          resizeTimer
+        );
+
+        resizeTimer =
+          setTimeout(
+            () => {
+
+              if (
+                pdfDocument
+              ) {
+
+                renderPage(
+                  currentPage
+                );
+
+              }
+
+            },
+            250
+          );
+
+      }
+    );
+
+
+    /* =========================================
+       START
+    ========================================== */
+
+    updateControls();
+
+    loadPDF();
+
+  </script>
 
 </body>
 </html>
